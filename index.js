@@ -13,7 +13,7 @@ import {registerValidation} from "./validations.js"
 const PORT = process.env.PORT || 5000
 
 mongoose
-   .connect("mongodb+srv://kirill:elizaveta@node-blog.3w2atvr.mongodb.net/shop?retryWrites=true&w=majority")
+   .connect(process.env.MONGO_DB)
    .then(() =>  console.log("DB ok"))
    .catch((e) => console.log(e))
 
