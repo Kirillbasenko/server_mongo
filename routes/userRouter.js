@@ -1,10 +1,9 @@
-const Router = require("express")
+import {Router} from "express"
+import {userController} from "../controllers/index.js"
+
 const router = new Router()
-const UserController = require("../controllers/userController")
-const authMiddlewate = require("../middleware/authMiddleware")
 
-router.post("/registration", UserController.registration)
-router.post("/login", UserController.login)
-router.get("/auth", authMiddlewate, UserController.check)
+router.post("/registration", userController.registration)
+router.post("/login", userController.login)
 
-module.exports = router
+export default router

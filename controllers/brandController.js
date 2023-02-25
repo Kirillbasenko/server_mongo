@@ -24,9 +24,9 @@ export const create = async (req, res) => {
          name: req.body.name,
       });
 
-      const post = await doc.save();
+      const brand = await doc.save();
 
-      res.json(post);
+      res.json(brand);
    } catch (err) {
       console.log(err);
       res.status(500).json({
@@ -37,8 +37,8 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
    try {
-      const posts = await BrandModel.find();
-      res.json(posts);
+      const brands = await BrandModel.find();
+      res.json(brands);
    } catch (err) {
       console.log(err);
       res.status(500).json({

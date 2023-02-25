@@ -1,8 +1,9 @@
-const Router = require("express")
+import Router from "express"
+import {reviewController} from "../controllers/index.js"
+
 const router = new Router()
-const ReviewsInfo = require("../controllers/reviewController")
 
-router.get("/:id", ReviewsInfo.getAll)
-router.post("/:id", ReviewsInfo.create)
+router.get("/:id", reviewController.getAll)
+router.post("/:id", reviewController.create)
 
-module.exports = router
+export default router

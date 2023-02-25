@@ -1,52 +1,84 @@
-import ApiError from "../error/ApiError"
+//import ApiError from "../error/ApiError.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 //const {User, Basket} = require("../models/models")
-import User from "../models/models"
+import UserModel from "../models/User.js"
 
-const generateJwt = (id, email, role, name) => {
+const generateJwt = (_id) => {
    return jwt.sign(
-      {id, email, role, name},
-      process.env.SECRET_KEY,
+      {_id},
+      "random_secret_key123",
       {expiresIn: '24h'}
    )
 }
 
-class UserController {
-   async registration(req, res, next) {
-      const {email, password, role, name} = req.body
-      if(!email || !password) {
-         return next(ApiError.badRequest("Некорректные данные"))
+export const registration = async (req, res) => {
+   try {
+      const {email, role, name} = req.body
+
+      if(!email || !req.body.password) {
+         return res.status(404).json({message: "Некорректные данные"})
       }
-      const candidate = await User.findOne({where: {email}})
+
+      const candidate = await UserModel.findOne({email: email})
       if(candidate){
-         return next(ApiError.badRequest("Пользователь с таким email уже существует"))
+         return res.status(404).json({message: "Пользователь с таким email уже существует"})
       }
-      const hashPassword = await bcrypt.hash(password, 5)
-      const user = await User.create({email, role, password: hashPassword, name})
-      //const basket = await Basket.create({userId: user.id})
-      const token = generateJwt(user.id, user.email, user.role, user.name)
-      return res.json({token})
-   }
 
-   async login(req, res, next) {
-      const {email, password} = req.body
-      const user = await User.findOne({where: {email}})
+      const salt = await bcrypt.genSalt(10)
+      const hash = await bcrypt.hash(req.body.password, salt)
+
+      const doc = new UserModel({
+         email,
+         name,
+         password: hash,
+         role
+      });
+
+      const user = await doc.save()
+
+      const token = generateJwt(user._id)
+
+      const {password, ...userData} = user._doc
+
+      res.json({
+         ...userData,
+         token
+      });
+   } catch (err) {
+      console.log(err);
+      res.status(500).json({
+         message: 'Ошибка',
+      });
+   }
+};
+
+export const login = async (req, res) => {
+   try {
+      const {email} = req.body
+      const user = await UserModel.findOne({email: email})
+
       if(!user){
-         return next(ApiError.internal("Пользователь не найдет"))
+         return res.status(404).json({message: "Пользователь не найдет"})
       }
-      let comparePassword = bcrypt.compareSync(password, user.password)
+      const comparePassword = bcrypt.compare(req.body.password, user._doc.password)
       if(!comparePassword){
-         return next(ApiError.internal("Указан неверный пароль"))
+         return res.status(404).json({message: "Неверный логин или пароль"})
       }
-      const token = generateJwt(user.id, user.email, user.role, user.name)
-      return res.json({token})
-   }
 
-   async check(req, res, next) {
-      const token = generateJwt(req.user.id, req.user.email, req.user.role, req.user.name)
-      return res.json({token})
-   }
-}
+      const token = generateJwt(user._id)
 
-module.exports = new UserController()
+      const {password, ...userData} = user._doc
+
+      res.json({
+         ...userData,
+         token
+      });
+
+   } catch (err) {
+      console.log(err);
+      res.status(500).json({
+         message: 'Ошибка',
+      });
+   }
+};

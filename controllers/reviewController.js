@@ -1,7 +1,6 @@
-const ApiError = require("../error/ApiError")
-const {ReviewsInfo} = require("../models/models")
+import ReviewsInfoModel from "../models/ReviewsInfo.js"
 
-class ReviewController {
+/*class ReviewController {
    async create(req, res, next) {
       try {
          let {deviceId, userName, positive, negative, rate, comment} = req.body
@@ -18,4 +17,40 @@ class ReviewController {
    }
 }
 
-module.exports = new ReviewController()
+module.exports = new ReviewController()*/
+
+export const create = async (req, res) => {
+   try {
+      let {deviceId, userName, positive, negative, rate, comment} = req.body
+      const doc = new ReviewsInfoModel({
+         deviceId,
+         userName,
+         positive,
+         negative,
+         rate,
+         comment
+      });
+
+      const reviews = await doc.save();
+
+      res.json(reviews);
+   } catch (err) {
+      console.log(err);
+      res.status(500).json({
+         message: 'Не удалось создать статью',
+      });
+   }
+};
+
+export const getAll = async (req, res) => {
+   try {
+      let {deviceId} = req.query
+      const brands = await ReviewsInfoModel.find({deviceId});
+      res.json(brands);
+   } catch (err) {
+      console.log(err);
+      res.status(500).json({
+         message: 'Не удалось получить статьи',
+      });
+   }
+};
