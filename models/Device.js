@@ -5,8 +5,8 @@ const DeviceSchema = new mongoose.Schema({
    price: {type: Number, require: true},
    rating: {type: Number, default: 0},
    img: {type: String, require: true},
-   brandId: {type: Number, require: true},
-   typeId: {type: Number, require: true},
+   brandId: {type: String, require: true},
+   typeId: {type: String, require: true},
    current: {type: Number, default: 1},
    favorite: {type: Number, default: 0},
    info: {type: Array, default: []}

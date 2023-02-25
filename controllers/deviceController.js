@@ -63,13 +63,12 @@ import path from "path"
 
 module.exports = new DeviceController()*/
 
-
 export const create = async (req, res) => {
    try {
       let {name, price, brandId, typeId, current, favorite, img, info} = req.body
-      //const {img} = req.files
-      //let fileName = uuidv4() + ".jpg"
-      //img.mv(path.resolve(__dirname, '..', 'static', fileName))
+      /*const {img} = req.files
+      let fileName = uuidv4() + ".jpg"
+      img.mv(path.resolve(__dirname, '..', 'static', fileName))*/
       const doc = new DeviceModel({
          name,
          price,
@@ -77,11 +76,12 @@ export const create = async (req, res) => {
          typeId,
          current,
          favorite,
-         img
+         img,
+         info
       });
 
       const device = await doc.save()
-      if (info) {
+      /*if (info) {
          info = JSON.parse(info)
          let arr = info.map(i =>
             new DeviceInfoModel({
@@ -91,7 +91,7 @@ export const create = async (req, res) => {
             })
          )
          const infos = await arr.save()
-      }
+      }*/
    return res.json(device)
    } catch (err) {
       console.log(err);
