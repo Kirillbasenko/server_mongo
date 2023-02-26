@@ -108,7 +108,7 @@ export const getAll = async (req, res) => {
       limit = limit || 9
       let offset = page * limit - limit
       let devices
-      let query = await DeviceModel.find().length
+      let query = await DeviceModel.find()
       if(!brandId && !typeId){
          devices = await DeviceModel.find().limit(limit).skip(offset).exec()
       }
