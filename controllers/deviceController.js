@@ -108,7 +108,6 @@ export const getAll = async (req, res) => {
       limit = limit || 9
       let offset = page * limit - limit
       let devices
-      let query = await DeviceModel.find().length()
       if(!brandId && !typeId){
          devices = await DeviceModel.find().limit(limit).skip(offset).exec()
       }
@@ -121,7 +120,7 @@ export const getAll = async (req, res) => {
       if(brandId && typeId){
          devices = await DeviceModel.find({typeId, brandId, limit, offset}).limit(limit).skip(offset).exec()
       }
-      return res.json({devices, query})
+      return res.json(devices)
    } catch (err) {
       console.log(err);
       res.status(500).json({
