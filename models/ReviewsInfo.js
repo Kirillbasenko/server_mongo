@@ -1,12 +1,12 @@
 import mongoose from "mongoose"
 
 const ReviewsInfoSchema = new mongoose.Schema({
-   deviceId: {type: String, unique: true},
-   userName: {type: String,  unique: true},
-   positive: {type: String, unique: true},
-   negative: {type: String, unique: true},
-   rate: {type: Number, unique: true},
-   comment: {type: String, unique: true},
+   deviceId: {type: String, required: true,},
+   userName: {type: String, required: true,},
+   positive: {type: String, required: true,},
+   negative: {type: String, required: true,},
+   rate: {type: Number, required: true,},
+   comment: {type: String, required: true,},
 }, {
    timestamps: true
 })
