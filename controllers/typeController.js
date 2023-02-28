@@ -1,19 +1,4 @@
 import TypeModel from "../models/Type.js"
-//import ApiError from "../error/ApiError"
-
-/*class TypeController {
-   async create(req, res) {
-      const {name} = req.body
-      const type = await Type.create({name})
-      return res.json(type)
-      
-   }
-
-   async getAll(req, res) {
-      const types = await Type.findAll()
-      return res.json(types)
-   }
-}*/
 
 export const create = async (req, res) => {
    try {
@@ -27,7 +12,7 @@ export const create = async (req, res) => {
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Не удалось создать статью',
+         message: 'Не вдалось створити тип',
       });
    }
 };
@@ -39,9 +24,8 @@ export const getAll = async (req, res) => {
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Не удалось получить статьи',
+         message: 'Не вдалось получити тип',
       });
    }
 };
 
-//module.exports = new TypeController()

@@ -1,7 +1,6 @@
-//import ApiError from "../error/ApiError.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-//const {User, Basket} = require("../models/models")
+
 import UserModel from "../models/User.js"
 
 const generateJwt = (_id) => {
@@ -17,12 +16,12 @@ export const registration = async (req, res) => {
       const {email, role, name} = req.body
 
       if(!email || !req.body.password) {
-         return res.status(404).json({message: "Некорректные данные"})
+         return res.status(404).json({message: "Некоректні дані"})
       }
 
       const candidate = await UserModel.findOne({email: email})
       if(candidate){
-         return res.status(404).json({message: "Пользователь с таким email уже существует"})
+         return res.status(404).json({message: "Користувач із таким email вже існує"})
       }
 
       const salt = await bcrypt.genSalt(10)
@@ -48,7 +47,7 @@ export const registration = async (req, res) => {
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Ошибка',
+         message: 'Помилка',
       });
    }
 };
@@ -59,11 +58,11 @@ export const login = async (req, res) => {
       const user = await UserModel.findOne({email: email})
 
       if(!user){
-         return res.status(404).json({message: "Пользователь не найдет"})
+         return res.status(404).json({message: "Користувач не знайде"})
       }
       const comparePassword = bcrypt.compare(req.body.password, user._doc.password)
       if(!comparePassword){
-         return res.status(404).json({message: "Неверный логин или пароль"})
+         return res.status(404).json({message: "Невірний логін або пароль"})
       }
 
       const token = generateJwt(user._id)
@@ -78,7 +77,7 @@ export const login = async (req, res) => {
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Ошибка',
+         message: 'Помилка',
       });
    }
 };
